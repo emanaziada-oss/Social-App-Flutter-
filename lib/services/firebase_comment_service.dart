@@ -18,7 +18,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
 
   // Add comment function as specified in requirements
   Future<void> addComment(String postId, String commentText) async {
-    if (commentText.trim().isEmpty || _nameController.text.trim().isEmpty) {
+    if (commentText.trim().isEmpty && _nameController.text.trim().isEmpty) {
       return;
     }
 
