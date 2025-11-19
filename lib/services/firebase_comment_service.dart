@@ -1,29 +1,4 @@
-// import 'dart:js_interop';
-//
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:socialapp/models/comments_model.dart';
-// class FirebaseCommentService {
-//   FirebaseCommentService._();
-//
-//   static final FirebaseCommentService instance = FirebaseCommentService._();
-//   final FirebaseFirestore  _firestore = FirebaseFirestore.instance;
-//
-//   static const String collectionPath = 'posts';
-//   static const String subCollectionPath = 'comments';
-//
-//   Future<void> addComment (CommentModel comment, String postId) async{
-//     try{
-//       await _firestore
-//           .collection(collectionPath)
-//           .doc(postId)
-//           .collection(subCollectionPath)
-//           .add(comment.toJson());
-//     } on FirebaseException catch(e){
-//       print('Error adding comment: $e');
-//       rethrow;
-//     }
-//   }
-// }
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
