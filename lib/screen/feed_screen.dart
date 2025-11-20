@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../widget/postcard.dart';
+
 // Feed Screen - Displays all posts with real-time updates
 class FeedScreen extends StatelessWidget {
   const FeedScreen({Key? key}) : super(key: key);

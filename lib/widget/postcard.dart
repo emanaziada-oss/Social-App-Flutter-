@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubit/comment_cubit.dart';
 import '../screen/post_details_screen.dart';
 // Post Card Widget
 class PostCard extends StatelessWidget {
@@ -27,8 +28,13 @@ class PostCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PostDetailScreen(postId: postId),
-            ),
+              builder:(_)=>BlocProvider(
+                create: (context) => CommentCubit()..listenToComments(postId),
+                child: PostDetailsScreen(
+                  postId: postId,
+                )
+              ),
+            )
           );
         },
         child: Padding(
