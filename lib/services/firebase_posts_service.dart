@@ -1,24 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:socialapp/models/comments_model.dart';
+import 'package:socialapp/models/posts_model.dart';
 
-class FirebaseCommentService {
-  FirebaseCommentService._();
+class FirebasePostsService {
+  FirebasePostsService._();
 
-  static final FirebaseCommentService instance = FirebaseCommentService._();
+  static final FirebasePostsService instance = FirebasePostsService._();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   static const String collectionPath = "posts";
-  static const String subCollectionPath = "comments";
 
   // insert
-  Future<void> addComment(String postId , CommentModel comment) async{
+  Future<void> addPost(PostsModel post) async{
     try{
       await _firestore
           .collection(collectionPath)
-          .doc(postId)
-          .collection(subCollectionPath)
-          .add(comment.toJson());
+          .add(post.toJson());
 
     }on FirebaseException catch(e){
       rethrow;
@@ -26,17 +23,15 @@ class FirebaseCommentService {
   }
 
   //read
-  Stream <List<CommentModel>> getComments(String postId)  {
+  Stream <List<PostsModel>> getPosts()  {
     try {
       return _firestore
           .collection(collectionPath)
-          .doc(postId)
-          .collection(subCollectionPath)
           .orderBy("timestamp", descending: true)
           .snapshots()
           .map((snapshot) =>
           snapshot.docs
-              .map((doc) => CommentModel.fromJson(doc.data()))
+              .map((doc) => PostsModel.fromJson(doc.data()))
               .toList());
     }on FirebaseException catch(e){
       rethrow;

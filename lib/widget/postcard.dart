@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/comment_cubit.dart';
+import '../cubit/comment/comment_cubit.dart';
 import '../screen/post_details_screen.dart';
 // Post Card Widget
 class PostCard extends StatelessWidget {

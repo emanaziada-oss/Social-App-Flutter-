@@ -1,10 +1,12 @@
  import 'package:flutter/material.dart';
-import 'package:socialapp/cubit/comment_cubit.dart';
+import 'package:socialapp/cubit/comment/comment_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:socialapp/models/comments_model.dart';
 
-import '../cubit/comment_state.dart';
+import '../cubit/comment/comment_state.dart';
+import '../cubit/post/post_cubit.dart';
+import '../cubit/post/post_state.dart';
 
 // // Post Detail Screen - Displays comments with real-time updates
 // class PostDetailScreen extends StatefulWidget {
@@ -254,51 +256,55 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
             body: Column(
               children: [
                 // Post content section
-                FutureBuilder<DocumentSnapshot>(
-                  future: FirebaseFirestore.instance
-                      .collection('posts')
-                      .doc(widget.postId)
-                      .get(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Padding(
-                        padding: EdgeInsets.all(16),
-                        child: CircularProgressIndicator(),
-                      );
-                    }
 
-                    final postData = snapshot.data!.data() as Map<
-                        String,
-                        dynamic>;
-                    return Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        border: Border(
-                          bottom: BorderSide(color: Colors.grey[300]!),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            postData['authorName'] ?? 'Anonymous',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
+                BlocBuilder <PostCubit, PostState>
+                  (builder: (context, state) {
+                    if (state is PostLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                      } else if (state is PostSuccess) {
+                      return ListView.builder(
+                        itemCount: state.posts.length,
+                        itemBuilder: (context, index) {
+                          final post = state.posts;
+                          return Column(
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[100],
+                                  border: Border(
+                                    bottom: BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                )
+                              ),
+                               Column(
+                               crossAxisAlignment: CrossAxisAlignment.start,
+                               children: [
+                                 Text(
+                                    post.authorName ?? 'Anonymous',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                  post.content,
+                                  style: const TextStyle(fontSize: 16),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            postData['content'] ?? '',
-                            style: const TextStyle(fontSize: 16),
+                          ],
                           ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+
+
+                            ],
+                          );
+                        },
+                      );
+                    }else {
+                      return Center(child: Text("No Posts yet. Be the first!"));
+                    }
+                    }),
                 // Comments section header
                 Padding(
                   padding: const EdgeInsets.all(16),
@@ -388,13 +394,10 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                             onPressed: () {
                               if (_commentController.text.isNotEmpty &&
                                   _nameController.text.isNotEmpty) {
-                                final commentData = CommentModel
-                                  (authorName: _nameController.text,
-                                    text: _commentController.text);
-
                                 context.read<CommentCubit>().addComment(
                                     widget.postId,
-                                    commentData
+                                    _nameController.text,
+                                    _commentController.text
                                 );
                                 _commentController.clear();
                                 _nameController.clear();

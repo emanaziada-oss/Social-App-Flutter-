@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:socialapp/models/comments_model.dart';
-import '../services/firebase_comment_service.dart';
+import '../../services/firebase_comment_service.dart';
 import 'comment_state.dart';
 
 
@@ -13,10 +13,8 @@ class CommentCubit extends Cubit<CommentState> {
 
   Future<void> listenToComments(String postId) async {
     emit(CommentLoading());
-
     // Cancel old stream before starting a new one
     await _streamSub?.cancel();
-
     _streamSub = _service.getComments(postId).listen((comments) {
       emit(CommentSuccess(comments));
     }, onError: (error) {
@@ -24,10 +22,11 @@ class CommentCubit extends Cubit<CommentState> {
     });
   }
 
-  Future<void> addComment(String postId, CommentModel comment) async {
+  Future<void> addComment(String postId,String authorName, String text ) async {
     emit(CommentLoading());
+    final commentModel = CommentModel(authorName: authorName, text: text);
     try{
-      await _service.addComment(postId, comment);
+      await _service.addComment(postId, commentModel);
       emit(CommentInitial());
     }catch(e){
       emit(CommentError(e.toString()));

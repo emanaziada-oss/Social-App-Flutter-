@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:socialapp/cubit/post/post_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'feed_screen.dart';
 
 class SocialFeedApp extends StatelessWidget {
@@ -7,7 +8,12 @@ class SocialFeedApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PostCubit>(
+          create: (_) => PostCubit()..listenToPosts(),
+        ),
+      ], child:MaterialApp(
       title: 'Social Feed',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -15,6 +21,7 @@ class SocialFeedApp extends StatelessWidget {
       ),
       home: const FeedScreen(),
       debugShowCheckedModeBanner: false,
+    ),
     );
   }
 }
