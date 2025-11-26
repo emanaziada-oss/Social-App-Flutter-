@@ -8,11 +8,11 @@ class CommentCard extends StatelessWidget {
   final Timestamp? timestamp;
 
   const CommentCard({
-    Key? key,
+    super.key,
     required this.authorName,
     required this.text,
     this.timestamp,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

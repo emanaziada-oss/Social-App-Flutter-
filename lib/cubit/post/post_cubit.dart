@@ -25,14 +25,24 @@ class PostCubit extends Cubit<PostState> {
 
   Future<void> addPosts(String authorName, String content ) async {
     emit(PostLoading());
-    final postsModel = PostsModel(authorName: authorName, content: content);
+    final postsModel = PostsModel.withoutId(authorName: authorName, content: content);
     try{
       await _service.addPost(postsModel);
-      emit(PostInitial());
+      // emit(PostInitial());
     }catch(e){
       emit(PostFailure(e.toString()));
     }
   }
+  PostsModel? getPostById(String id) {
+    if (state is PostSuccess) {
+      return (state as PostSuccess).posts.firstWhere(
+            (post) => post.id == id,
+        // orElse: () => null,
+      );
+    }
+    return null;
+  }
+
   @override
   Future<void> close() {
     _streamSub?.cancel();

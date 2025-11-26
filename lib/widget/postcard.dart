@@ -11,12 +11,12 @@ class PostCard extends StatelessWidget {
   final Timestamp? timestamp;
 
   const PostCard({
-    Key? key,
+    super.key,
     required this.postId,
     required this.authorName,
     required this.content,
     this.timestamp,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class PostCard extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder:(_)=>BlocProvider(
-                create: (context) => CommentCubit()..listenToComments(postId),
+                create: (_) => CommentCubit()..listenToComments(postId),
                 child: PostDetailsScreen(
                   postId: postId,
                 )

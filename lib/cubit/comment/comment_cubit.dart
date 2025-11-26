@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:socialapp/models/comments_model.dart';
 import '../../services/firebase_comment_service.dart';
 import 'comment_state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 class CommentCubit extends Cubit<CommentState> {
@@ -10,6 +11,8 @@ class CommentCubit extends Cubit<CommentState> {
   StreamSubscription? _streamSub;
   final _service = FirebaseCommentService.instance;
 
+  String get uid => FirebaseAuth.instance.currentUser!.uid;
+  String? get uname => FirebaseAuth.instance.currentUser!.displayName;
 
   Future<void> listenToComments(String postId) async {
     emit(CommentLoading());
@@ -22,9 +25,9 @@ class CommentCubit extends Cubit<CommentState> {
     });
   }
 
-  Future<void> addComment(String postId,String authorName, String text ) async {
+  Future<void> addComment(String postId, String text ) async {
     emit(CommentLoading());
-    final commentModel = CommentModel(authorName: authorName, text: text);
+    final commentModel = CommentModel(authorName: uname!, text: text);
     try{
       await _service.addComment(postId, commentModel);
       emit(CommentInitial());
@@ -38,3 +41,4 @@ class CommentCubit extends Cubit<CommentState> {
     return super.close();
   }
 }
+

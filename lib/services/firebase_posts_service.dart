@@ -31,7 +31,7 @@ class FirebasePostsService {
           .snapshots()
           .map((snapshot) =>
           snapshot.docs
-              .map((doc) => PostsModel.fromJson(doc.data()))
+              .map((doc) => PostsModel.fromJson(doc.data(),doc.id))
               .toList());
     }on FirebaseException catch(e){
       rethrow;
